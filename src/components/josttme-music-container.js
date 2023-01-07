@@ -6,6 +6,7 @@ export class JosttmeMusicContainer extends LitElement {
 		title: {},
 		artista: {},
 		audio_src: {},
+		cover_image: {},
 	}
 	constructor() {
 		super()
@@ -42,6 +43,43 @@ export class JosttmeMusicContainer extends LitElement {
 		const songsList = this.songsList()
 		const wrapper = this.renderRoot?.querySelector('div') ?? null
 		wrapper.insertAdjacentHTML('beforeend', songsList.join(' '))
+		let isInteracted = false
+		// Define una función para comprobar si un elemento está visible
+
+		function isElementInViewport(el) {
+			var rect = el.getBoundingClientRect()
+			return (
+				rect.top >= 0 &&
+				rect.left >= 0 &&
+				rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+				rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+			)
+		}
+		wrapper.addEventListener('scroll', function () {
+			// Recorre todos los elementos <video>
+			if (isInteracted) {
+				wrapper.querySelectorAll('josttme-music-player').forEach((musicPlayer) => {
+					if (isElementInViewport(musicPlayer)) {
+						// Si el elemento <video> está visible, reproduce el archivo de video
+						const video = musicPlayer.shadowRoot.querySelector('video')
+						const audio = musicPlayer.shadowRoot.querySelector('audio')
+						video.play()
+						audio.play()
+					} else {
+						const video = musicPlayer.shadowRoot.querySelector('video')
+						const audio = musicPlayer.shadowRoot.querySelector('audio')
+						video.pause()
+						audio.pause()
+						audio.currentTime = 0
+						video.currentTime = 0
+						// Si el elemento <video> no está visible, pon en pausa la reproducción del archivo de video
+					}
+				})
+			}
+		})
+		document.querySelector('body').addEventListener('click', () => {
+			isInteracted = true
+		})
 	}
 
 	songsList() {
@@ -54,6 +92,7 @@ export class JosttmeMusicContainer extends LitElement {
 					audio_src=${song.music}
 					video_src=${song.video}
 					preload=${song.preload}
+					cover_image=${song.cover_image}
 				></josttme-music-player>
 			`
 		})

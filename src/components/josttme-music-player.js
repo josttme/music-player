@@ -10,6 +10,7 @@ export class JosttmeMusicPlayer extends LitElement {
 		audio_src: {},
 		video_src: {},
 		preload: {},
+		cover_image: {},
 	}
 	constructor() {
 		super()
@@ -50,6 +51,7 @@ export class JosttmeMusicPlayer extends LitElement {
 				left: 50%;
 				transform: translateX(-50%);
 			}
+
 			.poster-container::before {
 				content: '';
 				position: absolute;
@@ -83,6 +85,7 @@ export class JosttmeMusicPlayer extends LitElement {
 			h3 {
 				margin: 0;
 				padding: 0;
+				text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
 			}
 			h3 {
 				font-weight: 400;
@@ -166,14 +169,9 @@ export class JosttmeMusicPlayer extends LitElement {
 		const previousThis = this
 		const mainContainerPlayer = this.renderRoot?.querySelector('.main-container-player') ?? null
 		const posterContainer = this.renderRoot?.querySelector('.poster-container') ?? null
-		// Observer Playing
-		registerPlayer(mainContainerPlayer)
-		//registerPlayerSrc(mainContainerPlayer)
 
-		// Update Progress Bar
 		function updateProgressBar(e) {
 			if (!e.target.paused) {
-				console.log(e.target.paused)
 				previousThis.pause.classList.remove('hidden')
 				previousThis.play.classList.add('hidden')
 			} else {
@@ -207,6 +205,8 @@ export class JosttmeMusicPlayer extends LitElement {
 		// Events Listeners
 		this.music.addEventListener('timeupdate', updateProgressBar)
 		this.progressContainer.addEventListener('click', setProgressBar)
+		registerPlayer(mainContainerPlayer)
+
 		//posterContainer.addEventListener('click', this.togglePlay)
 	}
 
@@ -235,13 +235,20 @@ export class JosttmeMusicPlayer extends LitElement {
 		return html`
 			<div id=${this.id} class="main-container-player">
 				<div class="poster-container" @click=${this.togglePlay}>
-					<video preload=${this.preload} loop muted src=${this.video_src}></video>
+					<video
+						preload=${this.preload}
+						data-src=${this.video_src}
+						type="video/mp4"
+						loop
+						muted
+						data-poster=${this.cover_image}
+					></video>
 				</div>
 				<div class="player-container">
 					<div class="details">
 						<h2 id="title">${this.title}</h2>
 						<h3 id="artist">${this.artista}</h3>
-						<audio preload=${this.preload} src=${this.audio_src}></audio>
+						<audio preload=${this.preload} data-src=${this.audio_src} type="audio/mpeg"></audio>
 					</div>
 					<!-- Duration -->
 					<div class="duration-wrapper">

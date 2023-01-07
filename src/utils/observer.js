@@ -1,13 +1,18 @@
 // Function Observer
 const loadPlayer = (entries, observer) => {
-	entries.forEach((entry) => {
-		if (entry.isIntersecting) {
-			console.log(entry)
-			const target = entry.target
-			identifyEntry(entry, 'audio').play()
-			identifyEntry(entry, 'video').play()
-			target.querySelector('audio').addEventListener('ended', function () {
+	entries
+		.filter((entry) => entry.isIntersecting)
+		.forEach((entry) => {
+			const video = entry.target.querySelector('video')
+			const audio = entry.target.querySelector('audio')
+			audio.src = audio.dataset.src
+			video.src = video.dataset.src
+			video.poster = video.dataset.poster
+
+			// Skips to the next music at the end
+			audio.addEventListener('ended', function () {
 				const wrapper = document.querySelector('josttme-music-container').shadowRoot.children[0]
+				// Scroll to do
 				let autoScroll = window.innerHeight / 2 + 100
 
 				wrapper.scrollTo({
@@ -15,30 +20,20 @@ const loadPlayer = (entries, observer) => {
 					behavior: 'smooth',
 				})
 			})
-		} else {
-			identifyEntry(entry, 'audio').pause()
-			identifyEntry(entry, 'video').pause()
-			identifyEntry(entry, 'audio').currentTime = 0
-			identifyEntry(entry, 'video').currentTime = 0
-		}
-	})
+			observer.unobserve(entry.target)
+		})
 }
 
 const optionsPlayer = {
 	root: null,
-	rootMargin: '500px 0px 500px 0px ',
-	threshold: 0.5,
+	rootMargin: '1000px 0px 2000px 0px ',
+	threshold: 0.0,
 }
 
-function identifyEntry(entry, identify) {
-	return entry.target.querySelector(identify)
-}
 // Create instance of observer
 const observerPlayer = new IntersectionObserver(loadPlayer, optionsPlayer)
 
 // Register Observer
 export function registerPlayer(target) {
-	document.querySelector('body').addEventListener('click', () => {
-		observerPlayer.observe(target)
-	})
+	observerPlayer.observe(target)
 }
