@@ -59,20 +59,18 @@ export class JosttmeMusicContainer extends LitElement {
 			// Recorre todos los elementos <video>
 			if (isInteracted) {
 				wrapper.querySelectorAll('josttme-music-player').forEach((musicPlayer) => {
+					const video = musicPlayer.shadowRoot.querySelector('video')
+					const audio = musicPlayer.shadowRoot.querySelector('audio')
 					if (isElementInViewport(musicPlayer)) {
-						// Si el elemento <video> está visible, reproduce el archivo de video
-						const video = musicPlayer.shadowRoot.querySelector('video')
-						const audio = musicPlayer.shadowRoot.querySelector('audio')
+						// Item player is visibility
 						video.play()
 						audio.play()
 					} else {
-						const video = musicPlayer.shadowRoot.querySelector('video')
-						const audio = musicPlayer.shadowRoot.querySelector('audio')
+						// Item player is not visibility
 						video.pause()
 						audio.pause()
 						audio.currentTime = 0
 						video.currentTime = 0
-						// Si el elemento <video> no está visible, pon en pausa la reproducción del archivo de video
 					}
 				})
 			}
@@ -84,7 +82,7 @@ export class JosttmeMusicContainer extends LitElement {
 
 	songsList() {
 		return songs.map((song) => {
-			return /*HTML */ `
+			return `
 				<josttme-music-player
 					id=${song.id}
 					title="${song.title}"

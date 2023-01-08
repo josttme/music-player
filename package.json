@@ -81,6 +81,7 @@
 		"reusify": "^1.0.4",
 		"rollup": "^3.9.0",
 		"run-parallel": "^1.2.0",
+		"sass": "^1.57.1",
 		"source-map-js": "^1.0.2",
 		"supports-preserve-symlinks-flag": "^1.0.0",
 		"to-regex-range": "^5.0.1",

@@ -1,4 +1,4 @@
-import './style.css'
+import './styles/style.css'
 import './utils/observer'
 import './components'
 const screenHeight = window.innerHeight

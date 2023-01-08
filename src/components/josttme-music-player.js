@@ -1,6 +1,6 @@
-import { LitElement, html, css } from 'lit'
+import { LitElement, html, unsafeCSS } from 'lit'
 import { registerPlayer } from '../utils/observer'
-
+import music_player from '../styles/music_player.scss?inline'
 export class JosttmeMusicPlayer extends LitElement {
 	static properties = {
 		isPlaying: { type: Boolean },
@@ -16,131 +16,8 @@ export class JosttmeMusicPlayer extends LitElement {
 		super()
 		this.isPlaying = false
 	}
-	static styles = [
-		css`
-			:host {
-				display: block;
-				width: 100%;
-				height: 100%;
-				scroll-snap-align: center;
-			}
-			.main-container-player {
-				position: relative;
-				width: 100%;
-				height: 100%;
-				overflow: hidden;
-				color: #e6e4e1;
-				background-color: #000;
-				font-size: 1.2rem;
-			}
-			.poster-container {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				right: 0;
-				overflow: hidden;
-			}
-			video {
-				position: absolute;
-				top: 0;
-				left: 0;
-				height: 100%;
-				left: 50%;
-				transform: translateX(-50%);
-			}
+	static styles = [unsafeCSS(music_player)]
 
-			.poster-container::before {
-				content: '';
-				position: absolute;
-				top: 0;
-				left: 0;
-				z-index: 10;
-				width: 100%;
-				height: 100%;
-				background-color: rgba(0, 0, 0, 0.3);
-			}
-			.player-container {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 100%;
-				height: auto;
-				display: grid;
-				z-index: 15;
-				left: 50%;
-				transform: translateX(-50%);
-			}
-			.details {
-				width: 100%;
-				height: auto;
-				display: grid;
-				justify-items: start;
-				margin-bottom: 0.5rem;
-				line-height: 1.2;
-			}
-			h2,
-			h3 {
-				margin: 0;
-				padding: 0;
-				text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-			}
-			h3 {
-				font-weight: 400;
-				font-size: 1.1rem;
-				opacity: 0.7;
-			}
-			.details,
-			.duration-wrapper,
-			.player-container {
-				padding: 0 5%;
-			}
-			/* Progress */
-
-			.progress-container {
-				border-radius: 5px;
-				height: 0.2rem;
-				width: 90%;
-				margin: 1rem auto;
-				background-color: #c2c2c268;
-			}
-
-			.progress {
-				background: #0085ff;
-				border-radius: 5px;
-				height: 100%;
-				width: 0;
-				transition: width 0.1s linear;
-			}
-
-			.duration-wrapper {
-				display: flex;
-				justify-content: space-between;
-			}
-			/* player */
-			.player-controls {
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				place-items: center;
-				margin-bottom: 0.3rem;
-				height: 5rem;
-			}
-			.playBtn {
-				width: 100%;
-			}
-			svg {
-				fill: #e6e4e1;
-				display: grid;
-				place-content: center;
-			}
-
-			.hidden {
-				display: none;
-			}
-		`,
-	]
 	get music() {
 		return this.renderRoot?.querySelector('audio') ?? null
 	}
@@ -167,7 +44,7 @@ export class JosttmeMusicPlayer extends LitElement {
 	}
 	firstUpdated() {
 		const previousThis = this
-		const mainContainerPlayer = this.renderRoot?.querySelector('.main-container-player') ?? null
+		const mainContainerPlayer = this.renderRoot?.querySelector('.container-music-player') ?? null
 		const posterContainer = this.renderRoot?.querySelector('.poster-container') ?? null
 
 		function updateProgressBar(e) {
@@ -233,40 +110,43 @@ export class JosttmeMusicPlayer extends LitElement {
 
 	render() {
 		return html`
-			<div id=${this.id} class="main-container-player">
-				<div class="poster-container" @click=${this.togglePlay}>
+			<div id=${this.id} class="container-music-player width-height">
+				<div
+					class="container-music-player__video-container width-height "
+					@click=${this.togglePlay}
+				>
 					<video
 						preload=${this.preload}
 						data-src=${this.video_src}
+						data-poster=${this.cover_image}
 						type="video/mp4"
 						loop
 						muted
-						data-poster=${this.cover_image}
 					></video>
 				</div>
-				<div class="player-container">
-					<div class="details">
-						<h2 id="title">${this.title}</h2>
-						<h3 id="artist">${this.artista}</h3>
+				<div class="container-music-player__player-container padding-item">
+					<div class="container-music-player__player-container__details padding-item">
+						<h2>${this.title}</h2>
+						<h3>${this.artista}</h3>
 						<audio preload=${this.preload} data-src=${this.audio_src} type="audio/mpeg"></audio>
 					</div>
 					<!-- Duration -->
-					<div class="duration-wrapper">
+					<div class="container-music-player__duration-wrapper padding-item">
 						<span id="current-time">00:00</span>
 						<span id="duration">00:00</span>
 					</div>
 					<!-- Progress -->
-					<div class="progress-container" id="progress-container">
-						<div class="progress" id="progress"></div>
+					<div class="container-music-player__progress-container" id="progress-container">
+						<div class="container-music-player__progress-container__progress" id="progress"></div>
 					</div>
 					<!-- Controls -->
-					<div class="player-controls">
+					<div class="container-music-player__player-controls">
 						<svg width="22" height="22" viewBox="0 0 24 24">
 							<path
 								d="M7.5 2.25C10.5 2.25 12 4.25 12 4.25C12 4.25 13.5 2.25 16.5 2.25C20 2.25 22.5 4.99999 22.5 8.5C22.5 12.5 19.2311 16.0657 16.25 18.75C14.4095 20.4072 13 21.5 12 21.5C11 21.5 9.55051 20.3989 7.75 18.75C4.81949 16.0662 1.5 12.5 1.5 8.5C1.5 4.99999 4 2.25 7.5 2.25Z"
 							></path>
 						</svg>
-						<div id="playBtn" @click=${this.togglePlay}>
+						<div id="container-music-player__player-controls__play-btn" @click=${this.togglePlay}>
 							<svg class="play " title="Play" width="50" height="40" viewBox="0 0 24 24">
 								<path d="m16.53 11.152-8-5A1 1 0 0 0 7 7v10a1 1 0 0 0 1.53.848l8-5a1 1 0 0 0 0-1.7z" />
 							</svg>
