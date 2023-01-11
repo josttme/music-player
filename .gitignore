@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+public/*.mp4
+public/*.mp3
+public/*.jpeg
 *.local
 
 # Editor directories and files
