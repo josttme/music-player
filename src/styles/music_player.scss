@@ -58,6 +58,7 @@
 				margin: 0;
 				padding: 0;
 				text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+				font-family: 'Arial Narrow Bold', sans-serif;
 			}
 			& h3 {
 				font-weight: 400;
@@ -96,9 +97,10 @@
 			width: 100%;
 		}
 		& svg {
-			fill: #e6e4e1;
+			transform: scale(1.1);
 			display: grid;
 			place-content: center;
+			fill: #e6e4e1;
 		}
 		& .hidden {
 			display: none;
@@ -107,6 +109,9 @@
 }
 .padding-item {
 	padding: 0 5%;
+}
+.opacity {
+	opacity: 0.6;
 }
 
 .width-height {
